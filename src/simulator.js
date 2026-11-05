@@ -15,7 +15,7 @@ export function createSimulator(log) {
   let tracker = null;
 
   const pbx = {
-    async getUser(ext) {
+    async getAgentUser(ext) {
       const a = agents.find((x) => x.ext === ext);
       return a ? { id: Number(ext), ext, name: a.name, queueStatus: queueStatus.get(ext) } : null;
     },

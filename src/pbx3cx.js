@@ -64,7 +64,7 @@ export function createPbxClient({ baseUrl, clientId, clientSecret }, log) {
   }
 
   // ---- XAPI: users and queue login status -------------------------------------
-  async function getUser(ext, { fresh = false } = {}) {
+  async function getAgentUser(ext, { fresh = false } = {}) {
     if (!EXT_RE.test(ext)) throw new Error(`Invalid extension "${ext}"`);
     const cached = userCache.get(ext);
     if (!fresh && cached && Date.now() - cached.at < 5 * 60_000) return cached.user;
@@ -84,12 +84,12 @@ export function createPbxClient({ baseUrl, clientId, clientSecret }, log) {
   }
 
   async function getQueueStatus(ext) {
-    return (await getUser(ext, { fresh: true }))?.queueStatus ?? null;
+    return (await getAgentUser(ext, { fresh: true }))?.queueStatus ?? null;
   }
 
   // QueueStatus PATCH works from V20 Update 4 onward ("LoggedIn" / "LoggedOut").
   async function setQueueStatus(ext, status) {
-    const user = await getUser(ext);
+    const user = await getAgentUser(ext);
     if (!user) throw new Error(`No 3CX user has extension ${ext}`);
     await api('PATCH', `/xapi/v1/Users(${user.id})`, { QueueStatus: status });
   }
@@ -180,5 +180,5 @@ export function createPbxClient({ baseUrl, clientId, clientSecret }, log) {
     connect();
   }
 
-  return { getUser, getQueueStatus, setQueueStatus, getDnType, startEventStream, api };
+  return { getAgentUser, getQueueStatus, setQueueStatus, getDnType, startEventStream, api };
 }

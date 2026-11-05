@@ -107,7 +107,7 @@ const directory = {
       (async () => {
         const saved = await repo.getAgent(ext);
         if (saved?.name && names.get(ext).startsWith('Ext ')) names.set(ext, saved.name);
-        const u = await pbx.getUser(ext);
+        const u = await pbx.getAgentUser(ext);
         if (u?.name) { names.set(ext, u.name); await repo.upsertAgent(ext, u.name); }
       })().catch((err) => log.warn(`[3cx] could not look up extension ${ext}:`, err.message));
     }
