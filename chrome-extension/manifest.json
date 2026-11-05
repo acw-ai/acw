@@ -24,7 +24,7 @@
     "cookies"
   ],
   "host_permissions": [
-    "https://dispositions.getus.ca/*"
+    "*://*/*"
   ],
   "background": {
     "service_worker": "background.js"

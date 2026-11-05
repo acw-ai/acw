@@ -1,4 +1,4 @@
--- GETUS dispositions: initial schema (SQLite, used by the simulator and local testing)
+-- ACW (After-Call Work): initial schema (SQLite, used by the simulator and local testing)
 CREATE TABLE IF NOT EXISTS calls (
   id               INTEGER PRIMARY KEY AUTOINCREMENT,
   call_key         TEXT NOT NULL UNIQUE,

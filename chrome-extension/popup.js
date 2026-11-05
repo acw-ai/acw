@@ -1,4 +1,4 @@
-const SERVER_URL = 'https://dispositions.getus.ca';
+const SERVER_URL = 'http://localhost:3100';
 let catalog = null;
 let currentPendingCallId = null;
 let pollTimer = null;
@@ -49,8 +49,8 @@ function setupEvents() {
     } catch {}
     try {
       if (chrome.cookies) {
-        await chrome.cookies.remove({ url: SERVER_URL, name: 'getus_agent_session' });
-        await chrome.cookies.remove({ url: SERVER_URL, name: 'getus_session' });
+        await chrome.cookies.remove({ url: SERVER_URL, name: 'acw_agent_session' });
+        await chrome.cookies.remove({ url: SERVER_URL, name: 'acw_session' });
       }
     } catch (e) {
       console.warn('Cookie remove failed:', e);

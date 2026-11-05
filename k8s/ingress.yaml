@@ -1,27 +1,27 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: getus-dispositions-ingress
-  namespace: getus-dispositions
+  name: acw-ingress
+  namespace: acw
   annotations:
     cert-manager.io/cluster-issuer: "letsencrypt-prod"
     nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
     nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
-    nginx.ingress.kubernetes.io/websocket-services: "getus-dispositions-svc"
+    nginx.ingress.kubernetes.io/websocket-services: "acw-svc"
 spec:
   ingressClassName: nginx
   tls:
     - hosts:
-        - dispositions.getus.ca
-      secretName: dispositions-getus-tls
+        - acw.example.com
+      secretName: acw-tls
   rules:
-    - host: dispositions.getus.ca
+    - host: acw.example.com
       http:
         paths:
           - path: /
             pathType: Prefix
             backend:
               service:
-                name: getus-dispositions-svc
+                name: acw-svc
                 port:
                   number: 80

@@ -1,4 +1,4 @@
--- GETUS dispositions: initial schema (MySQL 8 / MariaDB 10.6+)
+-- ACW (After-Call Work): initial schema (MySQL 8 / MariaDB 10.6+)
 -- Times are stored in UTC.
 
 CREATE TABLE IF NOT EXISTS calls (

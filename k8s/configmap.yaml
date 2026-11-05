@@ -1,30 +1,28 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: getus-config
-  namespace: getus-dispositions
+  name: acw-config
+  namespace: acw
 data:
   # Network & Environment
-  PORT: "3000"
+  PORT: "3100"
   HOST: "0.0.0.0"
   NODE_ENV: "production"
   COOKIE_SECURE: "true"
-  # Keep agents signed in permanently (1 year = 8760 hours) until they click "Sign out" manually
   SESSION_HOURS: "8760"
 
   # Database settings
   DB_DRIVER: "mysql"
   MYSQL_HOST: "mysql"
   MYSQL_PORT: "3306"
-  MYSQL_DATABASE: "getus_dispositions"
-  MYSQL_USER: "getus_dispo"
+  MYSQL_DATABASE: "acw_db"
+  MYSQL_USER: "acw_user"
   DB_AUTO_MIGRATE: "true"
 
-  # Business Logic & 3CX Rules
+  # Business Logic & PBX Rules
   MONITORED_EXTENSIONS: "" # Empty monitors all extensions
-  # false = Do NOT log agents out of 3CX queues automatically (agents manage queue status manually)
-  ENFORCE_DISPOSITION: "false"
+  ENFORCE_DISPOSITION: "true"
   REQUIRE_UNANSWERED_OUTBOUND: "true"
-  SKIP_INTERNAL_CALLS: "false"
+  SKIP_INTERNAL_CALLS: "true"
   INTERNAL_NUMBER_MAX_LENGTH: "4"
   GUARD_INTERVAL_MS: "20000"

@@ -1,10 +1,10 @@
-const DEFAULT_SERVER = 'https://dispositions.getus.ca';
+const DEFAULT_SERVER = 'http://localhost:3100';
 let popupWindowId = null;
 let lastNotifiedCallId = null;
 let streamAbortController = null;
 
 chrome.runtime.onInstalled.addListener(() => {
-  console.log('GETUS Dispositions extension installed.');
+  console.log('ACW Agent Assist extension installed.');
   initConnection();
 });
 

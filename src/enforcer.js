@@ -1,6 +1,6 @@
 // Makes the outcome mandatory: when an agent owes one, log them out of their 3CX
 // queues; log them back in once every pending call has an outcome.
-// Only agents who were logged in to queues are touched, and only GETUS restores them.
+// Only agents who were logged in to queues are touched, and only ACW restores them.
 export function createEnforcer({ config, repo, pbx, onChange, log }) {
   const chains = new Map();
   const serial = (ext, fn) => {

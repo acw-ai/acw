@@ -2,7 +2,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: mysql-data-pvc
-  namespace: getus-dispositions
+  namespace: acw
 spec:
   accessModes:
     - ReadWriteOnce
@@ -15,7 +15,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: mysql
-  namespace: getus-dispositions
+  namespace: acw
 spec:
   type: ClusterIP
   ports:
@@ -29,7 +29,7 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: mysql
-  namespace: getus-dispositions
+  namespace: acw
 spec:
   serviceName: mysql
   replicas: 1
@@ -54,22 +54,22 @@ spec:
             - name: MYSQL_ROOT_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: getus-secret
+                  name: acw-secret
                   key: MYSQL_ROOT_PASSWORD
             - name: MYSQL_DATABASE
               valueFrom:
                 configMapKeyRef:
-                  name: getus-config
+                  name: acw-config
                   key: MYSQL_DATABASE
             - name: MYSQL_USER
               valueFrom:
                 configMapKeyRef:
-                  name: getus-config
+                  name: acw-config
                   key: MYSQL_USER
             - name: MYSQL_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: getus-secret
+                  name: acw-secret
                   key: MYSQL_PASSWORD
           ports:
             - containerPort: 3306

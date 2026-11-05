@@ -1,150 +1,148 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: getus-dispositions
-  namespace: getus-dispositions
+  name: acw
+  namespace: acw
   labels:
-    app: getus-dispositions
+    app: acw
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: getus-dispositions
+      app: acw
   template:
     metadata:
       labels:
-        app: getus-dispositions
+        app: acw
     spec:
-      imagePullSecrets:
-        - name: ciphertv-registry-secret
       initContainers:
         - name: wait-for-mysql
           image: busybox:1.36
           command: ['sh', '-c', 'until nc -z -w 2 mysql 3306; do echo "Waiting for MySQL database to be ready..."; sleep 2; done;']
       containers:
-        - name: getus-dispositions
-          image: registry.ciphertv.ca/getus/getus-dispositions:REPLACE_TAG
+        - name: acw
+          image: acw:latest
           imagePullPolicy: IfNotPresent
           ports:
-            - containerPort: 3000
+            - containerPort: 3100
               protocol: TCP
           env:
             # Server Settings (from ConfigMap)
             - name: PORT
               valueFrom:
                 configMapKeyRef:
-                  name: getus-config
+                  name: acw-config
                   key: PORT
             - name: HOST
               valueFrom:
                 configMapKeyRef:
-                  name: getus-config
+                  name: acw-config
                   key: HOST
             - name: NODE_ENV
               valueFrom:
                 configMapKeyRef:
-                  name: getus-config
+                  name: acw-config
                   key: NODE_ENV
             - name: COOKIE_SECURE
               valueFrom:
                 configMapKeyRef:
-                  name: getus-config
+                  name: acw-config
                   key: COOKIE_SECURE
             - name: SESSION_HOURS
               valueFrom:
                 configMapKeyRef:
-                  name: getus-config
+                  name: acw-config
                   key: SESSION_HOURS
 
             # Database Config (from ConfigMap)
             - name: DB_DRIVER
               valueFrom:
                 configMapKeyRef:
-                  name: getus-config
+                  name: acw-config
                   key: DB_DRIVER
             - name: MYSQL_HOST
               valueFrom:
                 configMapKeyRef:
-                  name: getus-config
+                  name: acw-config
                   key: MYSQL_HOST
             - name: MYSQL_PORT
               valueFrom:
                 configMapKeyRef:
-                  name: getus-config
+                  name: acw-config
                   key: MYSQL_PORT
             - name: MYSQL_DATABASE
               valueFrom:
                 configMapKeyRef:
-                  name: getus-config
+                  name: acw-config
                   key: MYSQL_DATABASE
             - name: MYSQL_USER
               valueFrom:
                 configMapKeyRef:
-                  name: getus-config
+                  name: acw-config
                   key: MYSQL_USER
             - name: DB_AUTO_MIGRATE
               valueFrom:
                 configMapKeyRef:
-                  name: getus-config
+                  name: acw-config
                   key: DB_AUTO_MIGRATE
 
             # Business Rules (from ConfigMap)
             - name: ENFORCE_DISPOSITION
               valueFrom:
                 configMapKeyRef:
-                  name: getus-config
+                  name: acw-config
                   key: ENFORCE_DISPOSITION
             - name: REQUIRE_UNANSWERED_OUTBOUND
               valueFrom:
                 configMapKeyRef:
-                  name: getus-config
+                  name: acw-config
                   key: REQUIRE_UNANSWERED_OUTBOUND
             - name: SKIP_INTERNAL_CALLS
               valueFrom:
                 configMapKeyRef:
-                  name: getus-config
+                  name: acw-config
                   key: SKIP_INTERNAL_CALLS
             - name: INTERNAL_NUMBER_MAX_LENGTH
               valueFrom:
                 configMapKeyRef:
-                  name: getus-config
+                  name: acw-config
                   key: INTERNAL_NUMBER_MAX_LENGTH
             - name: GUARD_INTERVAL_MS
               valueFrom:
                 configMapKeyRef:
-                  name: getus-config
+                  name: acw-config
                   key: GUARD_INTERVAL_MS
 
-            # Database & 3CX Passwords (from Secret)
+            # Database & PBX Passwords (from Secret)
             - name: MYSQL_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: getus-secret
+                  name: acw-secret
                   key: MYSQL_PASSWORD
             - name: PBX_URL
               valueFrom:
                 secretKeyRef:
-                  name: getus-secret
+                  name: acw-secret
                   key: PBX_URL
             - name: PBX_CLIENT_ID
               valueFrom:
                 secretKeyRef:
-                  name: getus-secret
+                  name: acw-secret
                   key: PBX_CLIENT_ID
             - name: PBX_CLIENT_SECRET
               valueFrom:
                 secretKeyRef:
-                  name: getus-secret
+                  name: acw-secret
                   key: PBX_CLIENT_SECRET
             - name: SUPERVISOR_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: getus-secret
+                  name: acw-secret
                   key: SUPERVISOR_PASSWORD
             - name: SESSION_SECRET
               valueFrom:
                 secretKeyRef:
-                  name: getus-secret
+                  name: acw-secret
                   key: SESSION_SECRET
 
           resources:
@@ -158,16 +156,16 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: getus-dispositions-svc
-  namespace: getus-dispositions
+  name: acw-svc
+  namespace: acw
   labels:
-    app: getus-dispositions
+    app: acw
 spec:
   type: ClusterIP
   selector:
-    app: getus-dispositions
+    app: acw
   ports:
     - name: http
       port: 80
-      targetPort: 3000
+      targetPort: 3100
       protocol: TCP
