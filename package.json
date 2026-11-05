@@ -1,0 +1,19 @@
+{
+  "name": "acw",
+  "version": "1.0.0",
+  "description": "ACW - Open-Source Voice & PBX After-Call Work, Dispositions & AI Summarization",
+  "license": "AGPL-3.0",
+  "type": "module",
+  "engines": {
+    "node": ">=22.15"
+  },
+  "scripts": {
+    "start": "node --use-system-ca --env-file-if-exists=.env src/server.js",
+    "simulate": "node --use-system-ca --env-file-if-exists=.env src/server.js --simulate",
+    "migrate": "node --use-system-ca --env-file-if-exists=.env src/migrate-cli.js"
+  },
+  "dependencies": {
+    "mysql2": "^3.24.6",
+    "ws": "^8.18.0"
+  }
+}

@@ -1,0 +1,52 @@
+variables:
+  IMAGE_NAME: "registry.ciphertv.ca/getus/getus-dispositions"
+  DOCKER_HOST: "tcp://docker:2375"
+  DOCKER_TLS_CERTDIR: ""
+  KUBECONFIG: "/root/.kube/config"
+
+stages:
+  - build-&-push
+  - deploy
+
+build:
+  stage: build-&-push
+  tags:
+    - getus-dispositions
+  image: docker:20.10.24-dind
+  services:
+    - name: docker:20.10.24-dind
+      command: ["--tls=false"]
+  before_script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" registry.ciphertv.ca
+  script:
+    - export IMAGE_TAG=$CI_COMMIT_SHORT_SHA
+    - docker build -t $IMAGE_NAME:$IMAGE_TAG .
+    - docker push $IMAGE_NAME:$IMAGE_TAG
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
+      when: always
+
+deploy:
+  stage: deploy
+  tags:
+    - getus-dispositions
+  image: dtzar/helm-kubectl:3.14.0
+  before_script:
+    - which kubectl || (curl -sLO "https://dl.k8s.io/release/v1.29.2/bin/linux/amd64/kubectl" && chmod +x kubectl && mv kubectl /usr/local/bin/)
+    - mkdir -p $HOME/.kube
+    - echo "$KUBE_CONFIG_DATA" | base64 -d > $HOME/.kube/config
+    - export KUBECONFIG=$HOME/.kube/config
+  script:
+    - export IMAGE_TAG=$CI_COMMIT_SHORT_SHA
+    # 1. Apply config and ingress
+    - kubectl apply -f k8s/configmap.yaml
+    - kubectl apply -f k8s/ingress.yaml
+    # 2. Update deploy.yaml with current commit tag and deploy
+    - sed -i "s|REPLACE_TAG|$IMAGE_TAG|g" k8s/deploy.yaml
+    - kubectl apply -f k8s/deploy.yaml
+    # 3. Wait for rollout
+    - kubectl rollout status deployment/getus-dispositions -n getus-dispositions --timeout=180s
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
+      when: on_success
+    - when: never

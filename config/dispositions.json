@@ -1,0 +1,43 @@
+{
+  "defaultCategory": "Sales",
+  "categories": [
+    {
+      "name": "Sales",
+      "outcomes": [
+        { "name": "Interested" },
+        { "name": "Follow-up Required", "requiresFollowUp": true },
+        { "name": "Customer Requested Callback", "requiresFollowUp": true },
+        { "name": "Sale Completed", "conversion": true },
+        { "name": "Not Interested" },
+        { "name": "Not Serviceable" },
+        { "name": "No Answer", "unanswered": true },
+        { "name": "Voicemail", "unanswered": true },
+        { "name": "Wrong Number", "unanswered": true }
+      ]
+    },
+    {
+      "name": "Customer Service",
+      "outcomes": [
+        { "name": "Resolved" },
+        { "name": "Escalated" },
+        { "name": "Billing Inquiry" },
+        { "name": "Cancellation Request" },
+        { "name": "Callback Required", "requiresFollowUp": true },
+        { "name": "No Answer", "unanswered": true },
+        { "name": "Voicemail", "unanswered": true }
+      ]
+    },
+    {
+      "name": "Technical Support",
+      "outcomes": [
+        { "name": "Resolved" },
+        { "name": "Troubleshooting Required" },
+        { "name": "Technician Escalation" },
+        { "name": "Not Serviceable" },
+        { "name": "Pending", "requiresFollowUp": true },
+        { "name": "No Answer", "unanswered": true },
+        { "name": "Voicemail", "unanswered": true }
+      ]
+    }
+  ]
+}

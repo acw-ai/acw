@@ -1,0 +1,27 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: getus-dispositions-ingress
+  namespace: getus-dispositions
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
+    nginx.ingress.kubernetes.io/websocket-services: "getus-dispositions-svc"
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - dispositions.getus.ca
+      secretName: dispositions-getus-tls
+  rules:
+    - host: dispositions.getus.ca
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: getus-dispositions-svc
+                port:
+                  number: 80

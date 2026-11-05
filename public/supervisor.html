@@ -1,0 +1,295 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ACW · After-Call Work Command Center</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body class="supervisor-body">
+  <!-- Login Screen -->
+  <main id="login" class="picker card" hidden>
+    <div class="brand">
+      <div class="logo acw-brand-logo" aria-hidden="true">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 18v-6a9 9 0 0 1 18 0v6"/>
+          <path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/>
+          <path d="M12 9v6M9 11v2M15 11v2"/>
+        </svg>
+      </div>
+      <div>
+        <div class="brand-title">ACW</div>
+        <div class="brand-sub">After-Call Work Portal</div>
+      </div>
+    </div>
+    <h1>Supervisor sign-in</h1>
+    <form id="loginForm" class="login-form" novalidate>
+      <div class="field">
+        <label for="password">Password</label>
+        <input id="password" name="password" type="password" autocomplete="current-password" required>
+      </div>
+      <div id="loginError" class="form-error" role="alert" hidden></div>
+      <div class="submit-row">
+        <button class="btn primary block" type="submit">Sign in</button>
+      </div>
+    </form>
+  </main>
+
+  <!-- Dashboard App Shell -->
+  <div class="app-layout" id="dash" hidden>
+    <!-- Left Navigation Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="brand">
+          <div class="logo acw-brand-logo" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 18v-6a9 9 0 0 1 18 0v6"/>
+              <path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/>
+              <path d="M12 9v6M9 11v2M15 11v2"/>
+            </svg>
+          </div>
+          <div>
+            <div class="brand-title">ACW</div>
+            <div class="brand-sub">After-Call Work</div>
+          </div>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <button class="nav-item active" data-view="dashboard" type="button">
+          <span class="nav-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></svg>
+          </span>
+          <span class="nav-label">Dashboard</span>
+        </button>
+        <button class="nav-item" data-view="agents" type="button">
+          <span class="nav-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </span>
+          <span class="nav-label">Agents & Team</span>
+          <span id="sidebarOnlineBadge" class="nav-badge" hidden>0</span>
+        </button>
+        <button class="nav-item" data-view="calls" type="button">
+          <span class="nav-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+          </span>
+          <span class="nav-label">Call History</span>
+        </button>
+        <button class="nav-item" data-view="dispositions" type="button">
+          <span class="nav-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+          </span>
+          <span class="nav-label">Dispositions</span>
+        </button>
+        <button class="nav-item" data-view="analytics" type="button">
+          <span class="nav-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+          </span>
+          <span class="nav-label">Reports & Analytics</span>
+        </button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <a class="sidebar-action" href="/acw-extension.zip" download title="Download Chrome Extension for Agents">
+          <span class="nav-icon">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          </span>
+          <span class="nav-label">Extension Zip</span>
+        </a>
+        <button id="signOut" class="sidebar-action" type="button" title="Sign out of supervisor">
+          <span class="nav-icon">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          </span>
+          <span class="nav-label">Sign out</span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Workspace -->
+    <div class="main-wrapper">
+      <!-- Top Action Bar -->
+      <header class="top-bar">
+        <div class="top-bar-left">
+          <h1 id="viewTitle">Command Center</h1>
+          <span id="viewSubtitle" class="muted sm">Live contact center overview</span>
+        </div>
+        <div class="top-bar-actions">
+          <label class="filters muted sm">
+            <span>Period:</span>
+            <select id="days">
+              <option value="1">Today</option>
+              <option value="7" selected>Last 7 days</option>
+              <option value="30">Last 30 days</option>
+            </select>
+          </label>
+          <a id="exportBtn" class="btn sm" href="#">Export CSV</a>
+          <span id="live" class="pill plain">Connecting…</span>
+        </div>
+      </header>
+
+      <div id="error" class="form-error" hidden style="margin: 16px 28px 0;"></div>
+
+      <!-- Main Views Container -->
+      <main class="content-area">
+        <!-- 1. DASHBOARD VIEW -->
+        <div class="view-panel active" id="view-dashboard">
+          <section class="kpis" id="kpis" aria-label="Key Performance Indicators"></section>
+
+          <!-- Live Active Calls Card -->
+          <section class="card panel live-calls-card">
+            <div class="panel-head">
+              <div style="display:flex;align-items:center;gap:10px;">
+                <span class="pulse-live-badge"></span>
+                <h2>Live Active Calls (On Call Now)</h2>
+              </div>
+              <span id="activeCallsBadge" class="pill plain sm">0 On Call</span>
+            </div>
+            <div id="activeCallsContainer" class="panel-body"></div>
+          </section>
+
+          <section class="card panel">
+            <div class="panel-head">
+              <div>
+                <h2>Waiting for an outcome</h2>
+                <span class="muted sm">Calls ended where agents must submit a disposition</span>
+              </div>
+            </div>
+            <div id="pending"></div>
+          </section>
+
+          <div class="grid-2">
+            <section class="card panel">
+              <div class="panel-head">
+                <div style="display:flex;align-items:center;gap:8px;">
+                  <h2>Disposition Analytics</h2>
+                </div>
+                <span class="muted sm" id="outcomesPeriod"></span>
+              </div>
+              <div id="outcomes"></div>
+            </section>
+            <section class="card panel">
+              <div class="panel-head">
+                <div>
+                  <h2>Team Performance Summary</h2>
+                </div>
+                <span class="muted sm" id="agentsPeriod"></span>
+              </div>
+              <div id="agents"></div>
+            </section>
+          </div>
+        </div>
+
+        <!-- 2. AGENTS & TEAM VIEW -->
+        <div class="view-panel" id="view-agents">
+          <section class="card panel">
+            <div class="panel-head">
+              <div>
+                <h2>Agent Directory & Status</h2>
+                <span class="muted sm" id="agentStatusSummary">Monitor active connections and configure extension PINs</span>
+              </div>
+            </div>
+            <div id="pins"></div>
+          </section>
+
+          <section class="card panel">
+            <div class="panel-head">
+              <div>
+                <h2>Add New Agent</h2>
+                <span class="muted sm">Register an extension with an initial PIN and friendly name</span>
+              </div>
+            </div>
+            <form id="addAgent" class="panel-body inline-form" novalidate>
+              <input name="ext" inputmode="numeric" maxlength="10" placeholder="Extension" aria-label="New extension" required style="max-width:140px;">
+              <input name="name" placeholder="Agent Name (optional)" aria-label="Agent name" style="flex:1;">
+              <input name="pin" type="password" inputmode="numeric" maxlength="12" placeholder="PIN (4–12 digits)" aria-label="PIN for new extension" autocomplete="new-password" required style="max-width:160px;">
+              <button class="btn primary" type="submit">Add agent</button>
+            </form>
+          </section>
+        </div>
+
+        <!-- 3. CALL HISTORY VIEW -->
+        <div class="view-panel" id="view-calls">
+          <section class="card panel">
+            <div class="panel-head">
+              <div>
+                <h2>Recent Call Logs</h2>
+                <span class="muted sm">Detailed audit log of all inbound and outbound calls</span>
+              </div>
+              <label class="filters muted sm">
+                <span>Filter status:</span>
+                <select id="statusFilter">
+                  <option value="">All Calls</option>
+                  <option value="completed">Outcome saved</option>
+                  <option value="pending">Waiting</option>
+                  <option value="active">On call now</option>
+                  <option value="waived">Released by supervisor</option>
+                  <option value="not_required">Missed (no outcome needed)</option>
+                </select>
+              </label>
+            </div>
+            <div id="calls"></div>
+          </section>
+        </div>
+
+        <!-- 4. DISPOSITIONS VIEW -->
+        <div class="view-panel" id="view-dispositions">
+          <section class="card panel">
+            <div class="panel-head">
+              <div>
+                <h2>Call Dispositions Catalog</h2>
+                <span class="muted sm">Configure outcome categories and options available to agents</span>
+              </div>
+            </div>
+            <div id="dispositionsCatalog" class="panel-body"></div>
+          </section>
+
+          <section class="card panel">
+            <div class="panel-head">
+              <div>
+                <h2>Add New Disposition Option</h2>
+                <span class="muted sm">Add an outcome under an existing or new category</span>
+              </div>
+            </div>
+            <form id="addDispositionForm" class="panel-body inline-form dispo-form" novalidate>
+              <select id="dispCategorySelect" aria-label="Select existing category">
+                <option value="">Select category...</option>
+              </select>
+              <input id="dispNewCategoryInput" placeholder="Or new category name" aria-label="New category name" style="max-width:180px;">
+              <input id="dispOutcomeInput" placeholder="Outcome name, e.g. Customer Requested Callback" aria-label="Outcome name" required style="flex:1;">
+              <label class="checkbox-inline" title="Requires agent to specify follow-up date" style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer;">
+                <input type="checkbox" id="dispFollowUpCheck"> Follow-up date required
+              </label>
+              <button class="btn primary" type="submit">Add disposition</button>
+            </form>
+          </section>
+        </div>
+
+        <!-- 5. ANALYTICS VIEW -->
+        <div class="view-panel" id="view-analytics">
+          <section class="card panel">
+            <div class="panel-head">
+              <div>
+                <h2>Outcome Conversion & Share</h2>
+                <span class="muted sm" id="analyticsPeriod">Selected reporting period</span>
+              </div>
+            </div>
+            <div id="analyticsOutcomes" class="panel-body"></div>
+          </section>
+
+          <section class="card panel">
+            <div class="panel-head">
+              <div>
+                <h2>Agent Performance Leaderboard</h2>
+                <span class="muted sm">Key handle metrics, conversions, and disposition compliance</span>
+              </div>
+            </div>
+            <div id="analyticsAgents"></div>
+          </section>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script type="module" src="/supervisor.js"></script>
+</body>
+</html>

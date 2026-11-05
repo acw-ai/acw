@@ -1,0 +1,8 @@
+node_modules
+data/*.db
+data/*.sqlite
+.env
+.git
+.github
+*.tar.gz
+*.log

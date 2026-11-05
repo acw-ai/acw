@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ACW · PBX Call Simulator</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <div class="page">
+    <header class="page-head">
+      <div class="brand">
+        <div class="logo acw-brand-logo" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 18v-6a9 9 0 0 1 18 0v6"/>
+            <path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/>
+            <path d="M12 9v6M9 11v2M15 11v2"/>
+          </svg>
+        </div>
+        <div><h1>ACW Call Simulator</h1><div class="muted sm">Simulates PBX call events and queue enforcement</div></div>
+      </div>
+      <div class="actions"><a class="btn" href="/supervisor.html" target="_blank" rel="noopener">Supervisor view</a></div>
+    </header>
+
+    <div class="notice">
+      Agents sign in with PIN <strong>1234</strong>; the supervisor password is <strong>supervisor</strong>.
+      Open an agent's popup, then start a call here. Answer it, hang up, and watch the popup ask for the outcome.
+      While it waits, the agent is logged out of the queue, so <strong>Send queue call</strong> skips them.
+    </div>
+    <div id="error" class="form-error" hidden></div>
+
+    <section class="card panel">
+      <div class="panel-head"><h2>Agents</h2><span class="muted sm">Queue status is what 3CX would show</span></div>
+      <div class="panel-body"><div class="sim-agents" id="agents"></div></div>
+    </section>
+
+    <section class="card panel">
+      <div class="panel-head"><h2>Start a call</h2></div>
+      <div class="panel-body">
+        <form id="callForm" class="sim-form">
+          <div class="field"><label for="target">Route to</label>
+            <select id="target" name="ext"><option value="queue">Sales queue (next free agent)</option></select></div>
+          <div class="field"><label for="direction">Type</label>
+            <select id="direction" name="direction"><option value="inbound">Inbound</option><option value="outbound">Outbound</option></select></div>
+          <div class="field"><label for="number">Customer number</label>
+            <input id="number" name="number" value="+1 604 555 0142" autocomplete="off"></div>
+          <div class="field"><label for="name">Caller name</label>
+            <input id="name" name="name" placeholder="optional" autocomplete="off"></div>
+          <div class="field"><button class="btn primary" type="submit">Send queue call</button></div>
+        </form>
+      </div>
+    </section>
+
+    <section class="card panel">
+      <div class="panel-head"><h2>Calls in progress</h2></div>
+      <div id="calls"></div>
+    </section>
+  </div>
+  <script type="module" src="/sim.js"></script>
+</body>
+</html>

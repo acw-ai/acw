@@ -1,0 +1,25 @@
+services:
+  acw:
+    build: .
+    container_name: acw-server
+    restart: unless-stopped
+    ports:
+      - "3100:3100"
+    environment:
+      - PORT=3100
+      - HOST=0.0.0.0
+      - SIMULATE=true # Set to false and configure PBX_* for live 3CX PBX
+      - SUPERVISOR_PASSWORD=admin
+      - DB_DRIVER=sqlite
+      - DB_PATH=/app/data/acw.db
+      - BRAND_NAME=ACW
+      - BRAND_SUBTITLE=After-Call Work & PBX Intelligence
+      # - WEBHOOK_URL=https://your-crm.com/webhook
+      # - CRM_SCREENPOP_URL=https://app.hubspot.com/contacts/search?query={PHONE}
+      # - AI_PROVIDER=openai
+      # - OPENAI_API_KEY=your-key-here
+    volumes:
+      - acw-data:/app/data
+
+volumes:
+  acw-data:

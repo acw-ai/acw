@@ -1,0 +1,32 @@
+{
+  "manifest_version": 3,
+  "name": "ACW - Voice & PBX After-Call Work",
+  "version": "1.0.0",
+  "description": "Automatic PBX call disposition popup, wrap-up notes, and queue enforcement.",
+  "icons": {
+    "16": "icon16.png",
+    "48": "icon48.png",
+    "128": "icon128.png"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "ACW Agent Assist",
+    "default_icon": {
+      "16": "icon16.png",
+      "48": "icon48.png",
+      "128": "icon128.png"
+    }
+  },
+  "permissions": [
+    "storage",
+    "notifications",
+    "windows",
+    "cookies"
+  ],
+  "host_permissions": [
+    "https://dispositions.getus.ca/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  }
+}

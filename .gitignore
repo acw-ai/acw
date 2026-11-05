@@ -1,0 +1,10 @@
+node_modules/
+data/
+.env
+k8s/secret.yaml
+k8s/registry-secret.yaml
+runner-values.yaml
+*.tar
+*.tar.gz
+*.log
+.DS_Store

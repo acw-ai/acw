@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>GETUS UC</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="topbar">
+    <div class="brand">
+      <img src="logo.png" alt="GETUS" class="header-logo">
+      <div class="brand-sub">Call Dispositions</div>
+    </div>
+    <div class="meta">
+      <span id="agentDisplay" class="muted sm">Not signed in</span>
+      <button id="logoutBtn" class="btn-text" hidden>Sign out</button>
+    </div>
+  </div>
+
+  <div id="content" class="content">
+    <!-- Login Screen -->
+    <div id="loginView" class="card">
+      <h3>Agent Sign In</h3>
+      <p class="muted sm">Enter your 3CX extension and PIN.</p>
+      <form id="loginForm">
+        <label>Extension
+          <input type="text" id="extInput" placeholder="e.g. 3207" required>
+        </label>
+        <label>PIN
+          <input type="password" id="pinInput" placeholder="4–8 digits" required>
+        </label>
+        <div id="loginError" class="error-msg" hidden></div>
+        <button type="submit" class="btn primary full">Sign In</button>
+      </form>
+    </div>
+
+    <!-- Live Agent State Screen -->
+    <div id="agentView" hidden>
+      <div id="callContainer"></div>
+      <div id="outcomeFormCard" class="card" hidden>
+        <h3>Save Call Outcome</h3>
+        <p id="pendingCustomer" class="muted sm"></p>
+        <form id="dispositionForm">
+          <label>Category
+            <select id="catSelect" required>
+              <option value="">Select category...</option>
+            </select>
+          </label>
+
+          <label>Outcome
+            <select id="outcomeSelect" required disabled>
+              <option value="">Select outcome...</option>
+            </select>
+          </label>
+
+          <div id="followUpGroup" hidden>
+            <label>Follow-up Date
+              <input type="date" id="followUpDate">
+            </label>
+          </div>
+
+          <label>Notes (optional)
+            <textarea id="notesInput" rows="3" placeholder="Enter notes from call..."></textarea>
+          </label>
+
+          <button type="submit" id="saveOutcomeBtn" class="btn primary full">Save Outcome</button>
+        </form>
+      </div>
+
+      <div id="idleState" class="card text-center">
+        <div class="idle-icon">📞</div>
+        <h4>Ready for calls</h4>
+        <p class="muted sm">Waiting for your next call on 3CX...</p>
+      </div>
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
