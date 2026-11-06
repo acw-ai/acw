@@ -7,7 +7,8 @@ import { openDatabase } from './db.js';
 import { createHub } from './hub.js';
 import { createCallTracker } from './tracker.js';
 import { createEnforcer } from './enforcer.js';
-import { createPbxClient } from './pbx3cx.js';
+import { createTelephonyDriver } from './telephony/index.js';
+import { createWebhookTelephonyAdapter } from './telephony/webhook.js';
 import { createSimulator } from './simulator.js';
 import { hashPin, verifyPin, safeEqual, createSessions, createLoginLimiter } from './auth.js';
 import { dispatchWebhook } from './webhook.js';
@@ -24,9 +25,9 @@ const log = {
 const iso = (x) => (x ? new Date(x).toISOString() : null);
 
 // ---- Setup ---------------------------------------------------------------------
-if (!config.simulate && !(config.pbx.baseUrl && config.pbx.clientId && config.pbx.clientSecret)) {
-  console.error('Missing PBX_URL / PBX_CLIENT_ID / PBX_CLIENT_SECRET in .env.');
-  console.error('Fill them in, or run "npm run simulate" to try the app without a 3CX system.');
+if (!config.simulate && config.telephony.driver === '3cx' && !(config.pbx.baseUrl && config.pbx.clientId && config.pbx.clientSecret)) {
+  console.error('Missing PBX_URL / PBX_CLIENT_ID / PBX_CLIENT_SECRET in .env for 3CX driver.');
+  console.error('Fill them in, set TELEPHONY_DRIVER=webhook in .env, or run "npm run simulate".');
   process.exit(1);
 }
 
@@ -97,7 +98,8 @@ const loginByExt = createLoginLimiter({ maxFailures: 10, lockMinutes: 10 });
 const loginSupervisor = createLoginLimiter({ maxFailures: 5, lockMinutes: 15 });
 
 const sim = config.simulate ? createSimulator(log) : null;
-const pbx = sim ? sim.pbx : createPbxClient(config.pbx, log);
+const webhookAdapter = createWebhookTelephonyAdapter({ config, tracker: null, repo, directory: null, enforcer: null, log });
+const pbx = sim ? sim.pbx : (config.telephony.driver === 'webhook' ? webhookAdapter : createTelephonyDriver({ config, repo, log }));
 
 const names = new Map();
 const directory = {
@@ -109,7 +111,7 @@ const directory = {
         if (saved?.name && names.get(ext).startsWith('Ext ')) names.set(ext, saved.name);
         const u = await pbx.getAgentUser(ext);
         if (u?.name) { names.set(ext, u.name); await repo.upsertAgent(ext, u.name); }
-      })().catch((err) => log.warn(`[3cx] could not look up extension ${ext}:`, err.message));
+      })().catch((err) => log.warn(`[telephony] could not look up extension ${ext}:`, err.message));
     }
     return names.get(ext);
   },
@@ -134,6 +136,7 @@ function onChange(ext) {
 
 const enforcer = createEnforcer({ config, repo, pbx, onChange, log });
 const tracker = createCallTracker({ config, repo, enforcer, directory, onChange, log });
+webhookAdapter.attach({ tracker, enforcer });
 
 async function knownExtensions() {
   const set = new Set([...config.monitoredExtensions, ...(sim ? sim.control.agents.map((a) => a.ext) : [])]);
@@ -428,6 +431,7 @@ const routes = [
   ['GET', /^\/api\/config$/, () => ({
     brand: config.brand,
     catalog,
+    telephonyDriver: config.telephony.driver,
     enforce: config.enforce,
     simulate: config.simulate,
     crmScreenpopUrl: config.crm.screenpopUrl,
@@ -435,6 +439,18 @@ const routes = [
   })],
   ['POST', /^\/api\/ai\/analyze$/, async ({ body }) => {
     return (await analyzeCall(body)) || { error: 'AI analysis unavailable or provider is set to none.' };
+  }],
+  // Universal Inbound Telephony Webhooks (Asterisk, FreeSWITCH, Twilio, Telnyx, Vicidial, etc.)
+  ['POST', /^\/api\/(?:v1\/)?telephony\/events?$/, async ({ req, body, url }) => {
+    if (config.telephony.webhookToken) {
+      const auth = req.headers['authorization'] || '';
+      const customToken = req.headers['x-telephony-token'] || url.searchParams.get('token') || '';
+      const bearer = auth.startsWith('Bearer ') ? auth.slice(7).trim() : '';
+      if (bearer !== config.telephony.webhookToken && customToken !== config.telephony.webhookToken) {
+        throw httpError(401, 'Unauthorized: invalid telephony webhook token');
+      }
+    }
+    return webhookAdapter.processEvent(body);
   }],
 
   // Agent (own extension only)

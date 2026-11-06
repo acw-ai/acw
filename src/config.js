@@ -38,6 +38,23 @@ export const config = {
     clientSecret: (env.PBX_CLIENT_SECRET || '').trim(),
   },
 
+  telephony: {
+    driver: (env.TELEPHONY_DRIVER || (env.PBX_URL ? '3cx' : 'webhook')).toLowerCase(), // '3cx' | 'asterisk' | 'freeswitch' | 'webhook'
+    webhookToken: env.TELEPHONY_WEBHOOK_TOKEN || '',
+    asterisk: {
+      url: (env.ASTERISK_ARI_URL || 'http://127.0.0.1:8088').trim().replace(/\/+$/, ''),
+      wsUrl: (env.ASTERISK_ARI_WS || '').trim(),
+      username: env.ASTERISK_ARI_USER || 'acw',
+      password: env.ASTERISK_ARI_PASSWORD || '',
+      appName: env.ASTERISK_APP_NAME || 'acw',
+    },
+    freeswitch: {
+      host: env.FREESWITCH_ESL_HOST || '127.0.0.1',
+      port: Number(env.FREESWITCH_ESL_PORT || 8021),
+      password: env.FREESWITCH_ESL_PASSWORD || 'ClueCon',
+    },
+  },
+
   webhook: {
     url: (env.WEBHOOK_URL || '').trim(),
     secret: env.WEBHOOK_SECRET || '',
